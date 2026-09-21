@@ -6,6 +6,7 @@ import 'providers/app_provider.dart';
 import 'ui/settings/settings_screen.dart';
 import 'ui/vocabulary/vocabulary_screen.dart';
 import 'ui/history/history_screen.dart';
+import 'ui/floating_window.dart';
 import 'l10n/strings.dart';
 
 class TransquareApp extends StatefulWidget {
@@ -19,6 +20,7 @@ class _TransquareAppState extends State<TransquareApp>
     with WindowListener, WidgetsBindingObserver {
   int _currentIndex = 0;
   String? _translationText;
+  bool _showFloating = false;
 
   @override
   void initState() {
@@ -52,14 +54,33 @@ class _TransquareAppState extends State<TransquareApp>
     });
   }
 
-  void showFloatingWindow([String? text]) {
+  void showFloatingWindow([String? text]) async {
+    await windowManager.setMinimumSize(const Size(200, 150));
+    await windowManager.setSize(const Size(500, 180));
+    await windowManager.center();
+    await windowManager.setAlwaysOnTop(true);
+
     setState(() {
       _translationText = text;
+      _showFloating = true;
     });
-    final appProvider = context.read<AppProvider>();
+
     if (text != null && text.isNotEmpty) {
+      final appProvider = context.read<AppProvider>();
       appProvider.translate(text);
     }
+  }
+
+  void _closeFloatingWindow() async {
+    await windowManager.setAlwaysOnTop(false);
+    await windowManager.setMinimumSize(const Size(600, 400));
+    await windowManager.setSize(const Size(800, 600));
+    await windowManager.center();
+    setState(() {
+      _showFloating = false;
+      _translationText = null;
+    });
+    context.read<AppProvider>().clearCurrent();
   }
 
   @override
@@ -103,7 +124,12 @@ class _TransquareAppState extends State<TransquareApp>
               scrolledUnderElevation: 1,
             ),
           ),
-          home: _buildMainWindow(appProvider),
+          home: _showFloating
+                ? FloatingWindow(
+                    initialText: _translationText,
+                    onClose: _closeFloatingWindow,
+                  )
+                : _buildMainWindow(appProvider),
         );
       },
     );

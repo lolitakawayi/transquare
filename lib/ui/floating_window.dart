@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -10,18 +9,19 @@ import 'components/side_by_side_view.dart';
 
 class FloatingWindow extends StatefulWidget {
   final String? initialText;
+  final VoidCallback? onClose;
 
   const FloatingWindow({
     super.key,
     this.initialText,
+    this.onClose,
   });
 
   @override
   State<FloatingWindow> createState() => _FloatingWindowState();
 }
 
-class _FloatingWindowState extends State<FloatingWindow>
-    with WindowListener {
+class _FloatingWindowState extends State<FloatingWindow> {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
   String? _selectedText;
@@ -30,8 +30,6 @@ class _FloatingWindowState extends State<FloatingWindow>
   @override
   void initState() {
     super.initState();
-    windowManager.addListener(this);
-    _initializeWindow();
 
     if (widget.initialText != null && widget.initialText!.isNotEmpty) {
       _selectedText = widget.initialText;
@@ -44,17 +42,9 @@ class _FloatingWindowState extends State<FloatingWindow>
 
   @override
   void dispose() {
-    windowManager.removeListener(this);
     _textController.dispose();
     _focusNode.dispose();
     super.dispose();
-  }
-
-  Future<void> _initializeWindow() async {
-    await windowManager.setSize(const Size(500, 180));
-    await windowManager.center();
-    await windowManager.setAlwaysOnTop(true);
-    await windowManager.setSkipTaskbar(true);
   }
 
   Future<void> _triggerTranslation() async {
@@ -63,12 +53,6 @@ class _FloatingWindowState extends State<FloatingWindow>
 
     final appProvider = context.read<AppProvider>();
     await appProvider.translate(text);
-  }
-
-  @override
-  void onWindowClose() {
-    windowManager.hide();
-    context.read<AppProvider>().clearCurrent();
   }
 
   @override
@@ -194,8 +178,7 @@ class _FloatingWindowState extends State<FloatingWindow>
             IconButton(
               icon: const Icon(Icons.close, size: 16),
               onPressed: () {
-                appProvider.clearCurrent();
-                windowManager.hide();
+                widget.onClose?.call();
               },
               padding: EdgeInsets.zero,
               constraints:
