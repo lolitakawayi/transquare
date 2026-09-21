@@ -170,7 +170,11 @@ class _FloatingWindowState extends State<FloatingWindow> {
                 size: 16,
               ),
               tooltip: L10n.t(lang, 'floating.pin_window'),
-              onPressed: () => appProvider.togglePinned(),
+              onPressed: () {
+                final newPinned = !appProvider.settings.windowPinned;
+                appProvider.togglePinned();
+                windowManager.setAlwaysOnTop(newPinned);
+              },
               padding: EdgeInsets.zero,
               constraints:
                   const BoxConstraints(minWidth: 28, minHeight: 28),

@@ -55,8 +55,8 @@ class _TransquareAppState extends State<TransquareApp>
   }
 
   void showFloatingWindow([String? text]) async {
-    await windowManager.setMinimumSize(const Size(200, 150));
-    await windowManager.setSize(const Size(500, 180));
+    await windowManager.setMinimumSize(const Size(300, 200));
+    await windowManager.setSize(const Size(520, 360));
     await windowManager.center();
     await windowManager.setAlwaysOnTop(true);
 
