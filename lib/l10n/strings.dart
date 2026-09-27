@@ -40,7 +40,7 @@ class L10n {
     // Floating window
     'floating.compact_view': '紧凑视图',
     'floating.side_by_side': '双栏对照',
-    'floating.pin_window': '固定窗口',
+    'floating.pin_window': '置顶窗口',
     'floating.translating': '翻译中...',
     'floating.retry': '重试',
     'floating.input_hint': '输入文本或划词后按 Ctrl+Shift+T...',
