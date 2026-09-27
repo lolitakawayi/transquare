@@ -1,12 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import '../../models/translation_result.dart';
-import '../../providers/app_provider.dart';
-import '../../l10n/strings.dart';
+import 'package:flutter/material.dart'; // Flutter Material Design 组件库
+import 'package:flutter/services.dart'; // 系统服务（剪贴板 Clipboard）
+import 'package:provider/provider.dart'; // Provider 状态管理
+import '../../models/translation_result.dart'; // 翻译结果数据模型
+import '../../providers/app_provider.dart'; // 应用全局状态提供者
+import '../../l10n/strings.dart'; // 国际化字符串支持
 
+/// 翻译结果卡片组件
+///
+/// 以纵向卡片形式展示单条翻译结果，包含原文、译文、
+/// 翻译引擎标识、语言方向、缓存/实时标签以及底部操作按钮。
+/// 支持 compact 紧凑模式（隐藏头部和底部）。
 class TranslationCard extends StatelessWidget {
+  /// 翻译结果数据
   final TranslationResult result;
+
+  /// 是否使用紧凑模式（隐藏头部标签栏和底部操作栏）
   final bool compact;
 
   const TranslationCard({
@@ -17,19 +25,25 @@ class TranslationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 判断当前是否为暗色主题
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    // 获取主题主色调，用于高亮和边框
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Container(
-      constraints: const BoxConstraints(maxWidth: 480),
+      constraints: const BoxConstraints(maxWidth: 480), // 限制最大宽度，保持可读性
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          // 紧凑模式下隐藏头部（引擎标签、缓存/实时标签、语言方向）
           if (!compact) _buildHeader(context, primaryColor),
+          // 原文展示区域
           _buildSourceText(context, isDark),
           const SizedBox(height: 8),
+          // 译文展示区域
           _buildTranslatedText(context, isDark, primaryColor),
+          // 紧凑模式下隐藏底部操作栏
           if (!compact) ...[
             const SizedBox(height: 12),
             _buildFooter(context),
@@ -39,12 +53,16 @@ class TranslationCard extends StatelessWidget {
     );
   }
 
+  /// 构建卡片头部
+  ///
+  /// 显示翻译引擎名称标签、缓存/实时状态标签和语言方向（如"en → zh"）。
   Widget _buildHeader(BuildContext context, Color primaryColor) {
     final lang = context.read<AppProvider>().settings.language.code;
     return Container(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
+          // 翻译引擎标签：带主色调的半透明背景
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
@@ -62,6 +80,7 @@ class TranslationCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 6),
+          // 缓存/实时状态标签：橙色=缓存，绿色=实时翻译
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
@@ -81,7 +100,8 @@ class TranslationCard extends StatelessWidget {
               ),
             ),
           ),
-          const Spacer(),
+          const Spacer(), // 将语言方向推到行尾
+          // 语言方向指示：如 "en → zh"
           Text(
             '${result.sourceLang} → ${result.targetLang}',
             style: TextStyle(
@@ -94,13 +114,18 @@ class TranslationCard extends StatelessWidget {
     );
   }
 
+  /// 构建原文展示区域
+  ///
+  /// 以带背景和边框的容器展示源语言文本，文本可选中复制。
   Widget _buildSourceText(BuildContext context, bool isDark) {
+    // 从 AppProvider 获取用户设置的字体大小
     final fontSize = context.watch<AppProvider>().settings.fontSize;
 
     return Container(
-      width: double.infinity,
+      width: double.infinity, // 撑满可用宽度
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
+        // 半透明背景，与主题色融合
         color: isDark
             ? Colors.white.withValues(alpha: 0.04)
             : Colors.black.withValues(alpha: 0.03),
@@ -114,22 +139,27 @@ class TranslationCard extends StatelessWidget {
       child: SelectableText(
         result.sourceText,
         style: TextStyle(
-          fontSize: fontSize - 1,
+          fontSize: fontSize - 1, // 原文比译文略小，形成视觉层次
           color: isDark ? Colors.white70 : Colors.black87,
-          height: 1.5,
+          height: 1.5, // 行高，提升可读性
         ),
       ),
     );
   }
 
+  /// 构建译文展示区域
+  ///
+  /// 以带主色调背景和边框的容器展示翻译后的文本，文本可选中复制。
   Widget _buildTranslatedText(
       BuildContext context, bool isDark, Color primaryColor) {
+    // 从 AppProvider 获取用户设置的字体大小
     final fontSize = context.watch<AppProvider>().settings.fontSize;
 
     return Container(
-      width: double.infinity,
+      width: double.infinity, // 撑满可用宽度
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
+        // 主色调半透明背景，与原文区域形成视觉区分
         color: primaryColor.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
@@ -139,27 +169,32 @@ class TranslationCard extends StatelessWidget {
       child: SelectableText(
         result.translatedText,
         style: TextStyle(
-          fontSize: fontSize,
+          fontSize: fontSize, // 译文使用用户设置的字体大小
           color: isDark ? Colors.white : Colors.black87,
-          height: 1.6,
-          fontWeight: FontWeight.w500,
+          height: 1.6, // 行高略大于原文，提升译文可读性
+          fontWeight: FontWeight.w500, // 译文加粗，突出显示
         ),
       ),
     );
   }
 
+  /// 构建底部操作栏
+  ///
+  /// 包含语音朗读、复制译文和添加到生词本三个操作按钮。
   Widget _buildFooter(BuildContext context) {
     final lang = context.read<AppProvider>().settings.language.code;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end, // 按钮靠右排列
       children: [
+        // 语音朗读按钮（待实现）
         _actionButton(
           context,
           icon: Icons.volume_up_outlined,
           tooltip: L10n.t(lang, 'tts.play'),
-          onTap: () {},
+          onTap: () {}, // TODO: 实现 TTS 语音朗读功能
         ),
         const SizedBox(width: 4),
+        // 复制译文按钮
         _actionButton(
           context,
           icon: Icons.content_copy_outlined,
@@ -167,8 +202,10 @@ class TranslationCard extends StatelessWidget {
           onTap: () {
             final appProvider =
                 context.read<AppProvider>();
+            // 将译文复制到系统剪贴板
             Clipboard.setData(
                 ClipboardData(text: result.translatedText));
+            // 显示复制成功的提示
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(L10n.t(lang, 'card.copy_success')),
@@ -178,6 +215,7 @@ class TranslationCard extends StatelessWidget {
           },
         ),
         const SizedBox(width: 4),
+        // 添加到生词本按钮
         _actionButton(
           context,
           icon: Icons.bookmark_outline,
@@ -185,7 +223,9 @@ class TranslationCard extends StatelessWidget {
           onTap: () {
             final appProvider =
                 context.read<AppProvider>();
+            // 将当前翻译结果添加到生词本
             appProvider.addToVocabulary(result);
+            // 显示添加成功的提示
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(L10n.t(lang, 'card.vocab_success')),
@@ -194,19 +234,14 @@ class TranslationCard extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(width: 4),
-        _actionButton(
-          context,
-          icon: Icons.push_pin_outlined,
-          tooltip: L10n.t(lang, 'floating.pin_window'),
-          onTap: () {
-            context.read<AppProvider>().togglePinned();
-          },
-        ),
+        
       ],
     );
   }
 
+  /// 构建单个操作按钮
+  ///
+  /// 封装了 Tooltip 提示、InkWell 点击效果和统一样式的操作按钮。
   Widget _actionButton(
     BuildContext context, {
     required IconData icon,
@@ -216,14 +251,15 @@ class TranslationCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Tooltip(
-      message: tooltip,
+      message: tooltip, // 悬停时的提示文字
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(6), // 水波纹圆角
         child: Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
+            // 半透明背景按钮
             color: isDark
                 ? Colors.white.withValues(alpha: 0.05)
                 : Colors.black.withValues(alpha: 0.04),
