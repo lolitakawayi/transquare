@@ -91,15 +91,15 @@ class _FloatingWindowState extends State<FloatingWindow> {
             appProvider.isTranslating ||
             appProvider.currentText != null;
 
-        return Material(
-          color: Colors.transparent, // 透明背景，由 Container 控制外观
-          child: Container(
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Container(
             decoration: BoxDecoration(
               // 根据主题切换背景色
               color: isDark
                   ? const Color(0xFF1E1E2E)
                   : const Color(0xFFF8F9FA),
-              borderRadius: BorderRadius.circular(16), // 圆角窗口
+              borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 // 外层阴影：较大的模糊和偏移，模拟远距离投影
                 BoxShadow(
@@ -118,7 +118,6 @@ class _FloatingWindowState extends State<FloatingWindow> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16), // 裁剪圆角，防止子组件溢出
               child: Column(
-                mainAxisSize: MainAxisSize.min, // 列高度由子组件决定
                 children: [
                   // 标题栏：始终显示，包含拖拽、置顶、关闭按钮
                   _buildTitleBar(context, isDark, appProvider),
@@ -141,7 +140,11 @@ class _FloatingWindowState extends State<FloatingWindow> {
                       ),
                     )
                   else
-                    _buildIdleState(isDark, appProvider), // 空闲状态：显示欢迎提示
+                    Expanded(
+                      child: Center(
+                        child: _buildIdleState(isDark, appProvider), // 空闲状态：显示欢迎提示
+                      ),
+                    ),
                 ],
               ),
             ),

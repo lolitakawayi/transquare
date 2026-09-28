@@ -59,6 +59,7 @@ class _TransquareAppState extends State<TransquareApp>
     await windowManager.setSize(const Size(520, 360));
     await windowManager.center();
     await windowManager.setAlwaysOnTop(true);
+    await windowManager.setBackgroundColor(Colors.transparent);
 
     setState(() {
       _translationText = text;
@@ -76,6 +77,7 @@ class _TransquareAppState extends State<TransquareApp>
     await windowManager.setMinimumSize(const Size(600, 400));
     await windowManager.setSize(const Size(800, 600));
     await windowManager.center();
+    await windowManager.setBackgroundColor(Colors.transparent);
     setState(() {
       _showFloating = false;
       _translationText = null;
