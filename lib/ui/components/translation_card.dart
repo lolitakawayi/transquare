@@ -53,6 +53,36 @@ class TranslationCard extends StatelessWidget {
     );
   }
 
+  /// 将翻译目标语言代码转换为 TTS 引擎可识别的语言代码
+  ///
+  /// 例如：'zh' → 'zh-CN', 'en' → 'en-US', 'ja' → 'ja-JP'
+  static String _getTtsLanguageCode(String langCode) {
+    switch (langCode) {
+      case 'zh':
+        return 'zh-CN';
+      case 'en':
+        return 'en-US';
+      case 'ja':
+        return 'ja-JP';
+      case 'ko':
+        return 'ko-KR';
+      case 'fr':
+        return 'fr-FR';
+      case 'de':
+        return 'de-DE';
+      case 'es':
+        return 'es-ES';
+      case 'pt':
+        return 'pt-BR';
+      case 'ru':
+        return 'ru-RU';
+      case 'ar':
+        return 'ar-SA';
+      default:
+        return 'en-US'; // 默认使用美式英语
+    }
+  }
+
   /// 构建卡片头部
   ///
   /// 显示翻译引擎名称标签、缓存/实时状态标签和语言方向（如"en → zh"）。
@@ -186,12 +216,17 @@ class TranslationCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end, // 按钮靠右排列
       children: [
-        // 语音朗读按钮（待实现）
+        // 语音朗读按钮
         _actionButton(
           context,
           icon: Icons.volume_up_outlined,
           tooltip: L10n.t(lang, 'tts.play'),
-          onTap: () {}, // TODO: 实现 TTS 语音朗读功能
+          onTap: () {
+            final appProvider = context.read<AppProvider>();
+            // 使用 targetLang 推断朗读语言
+            final langCode = _getTtsLanguageCode(result.targetLang);
+            appProvider.ttsService.speak(result.translatedText, language: langCode);
+          },
         ),
         const SizedBox(width: 4),
         // 复制译文按钮

@@ -14,6 +14,7 @@ import 'services/glossary_service.dart';
 import 'services/vocabulary_service.dart';
 import 'services/history_service.dart';
 import 'services/text_processor.dart';
+import 'services/tts_service.dart';
 import 'platform/platform_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -35,11 +36,14 @@ void main() async {
   final vocabularyService = VocabularyService();
   final historyService = HistoryService();
 
+  final ttsService = TtsService();
+
   _globalAppProvider = AppProvider(
     translationService: translationService,
     glossaryService: glossaryService,
     vocabularyService: vocabularyService,
     historyService: historyService,
+    ttsService: ttsService,
   );
 
   await _globalAppProvider!.initialize();

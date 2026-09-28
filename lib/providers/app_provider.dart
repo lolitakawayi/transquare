@@ -10,6 +10,7 @@ import '../services/glossary_service.dart';
 import '../services/vocabulary_service.dart';
 import '../services/history_service.dart';
 import '../services/text_processor.dart';
+import '../services/tts_service.dart';
 import '../l10n/strings.dart';
 
 class AppProvider extends ChangeNotifier {
@@ -25,18 +26,21 @@ class AppProvider extends ChangeNotifier {
   final VocabularyService vocabularyService;
   final HistoryService historyService;
   final TextProcessor textProcessor;
+final TtsService ttsService;
 
-  AppProvider({
+AppProvider({
     TranslationService? translationService,
     GlossaryService? glossaryService,
     VocabularyService? vocabularyService,
     HistoryService? historyService,
     TextProcessor? textProcessor,
+    TtsService? ttsService,
   })  : translationService = translationService ?? TranslationService(),
         glossaryService = glossaryService ?? GlossaryService(),
         vocabularyService = vocabularyService ?? VocabularyService(),
         historyService = historyService ?? HistoryService(),
-        textProcessor = textProcessor ?? TextProcessor();
+        textProcessor = textProcessor ?? TextProcessor(),
+        ttsService = ttsService ?? TtsService();
 
   AppSettings get settings => _settings;
   TranslationResult? get currentResult => _currentResult;
@@ -218,6 +222,7 @@ class AppProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    ttsService.dispose();
     glossaryService.save();
     vocabularyService.save();
     historyService.save();
