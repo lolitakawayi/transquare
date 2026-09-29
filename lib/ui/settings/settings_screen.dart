@@ -81,7 +81,7 @@ class EngineSettingsTab extends StatelessWidget {
     final lang = settings.language.code;
 
     return ListView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
       children: [
         _sectionHeader(L10n.t(lang, 'engine.title')),
         const SizedBox(height: 12),
@@ -246,7 +246,7 @@ class ShortcutSettingsTab extends StatelessWidget {
     final lang = settings.language.code;
 
     return ListView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
       children: [
         _sectionHeader(L10n.t(lang, 'shortcut.trigger')),
         const SizedBox(height: 12),
@@ -476,6 +476,7 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
                   ),
                 )
               : ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 80),
                   itemCount: entries.length,
                   itemBuilder: (context, index) {
                     final entry = entries[index];
@@ -516,7 +517,7 @@ class AppearanceSettingsTab extends StatelessWidget {
     final lang = settings.language.code;
 
     return ListView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
       children: [
         // ── Language ──
         _sectionHeader(L10n.t(lang, 'settings.language')),
@@ -676,7 +677,7 @@ class AdvancedSettingsTab extends StatelessWidget {
     final lang = settings.language.code;
 
     return ListView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
       children: [
         _sectionHeader(L10n.t(lang, 'advanced.cache')),
         const SizedBox(height: 12),

@@ -142,6 +142,7 @@ class _VocabularyScreenState extends State<VocabularyScreen> {
                         ),
                       )
                     : ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 80),
                         itemCount: entries.length,
                         itemBuilder: (context, index) {
                           final entry = entries[index];
