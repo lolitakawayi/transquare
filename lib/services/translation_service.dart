@@ -7,6 +7,8 @@ import 'translators/google_translator.dart';
 import 'translators/microsoft_translator.dart';
 import 'translators/deepl_translator.dart';
 import 'translators/baidu_translator.dart';
+import 'translators/google_free_translator.dart';
+import 'translators/mymemory_translator.dart';
 
 class TranslationService {
   final CacheService cache;
@@ -66,6 +68,10 @@ class TranslationService {
         return DeepLTranslator(apiKey: deeplApiKey);
       case TranslationEngine.baidu:
         return BaiduTranslator(appId: baiduAppId, secretKey: baiduSecretKey);
+      case TranslationEngine.googleFree:
+        return GoogleFreeTranslator();
+      case TranslationEngine.mymemory:
+        return MyMemoryTranslator();
     }
   }
 
@@ -86,6 +92,9 @@ class TranslationService {
         return deeplApiKey;
       case TranslationEngine.baidu:
         return '$baiduAppId:$baiduSecretKey';
+      case TranslationEngine.googleFree:
+      case TranslationEngine.mymemory:
+        return null;
     }
   }
 

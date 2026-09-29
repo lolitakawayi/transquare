@@ -3,6 +3,8 @@ enum TranslationEngine {
   microsoft,
   deepl,
   baidu,
+  googleFree,
+  mymemory,
 }
 
 enum AppThemeMode {
@@ -107,7 +109,7 @@ class AppSettings {
   final ApiKeys apiKeys;
 
   const AppSettings({
-    this.engine = TranslationEngine.google,
+    this.engine = TranslationEngine.googleFree,
     this.themeMode = AppThemeMode.system,
     this.language = AppLanguage.chinese,
     this.fontSize = 14.0,
@@ -201,7 +203,7 @@ class AppSettings {
   factory AppSettings.fromJson(Map<String, dynamic> json) => AppSettings(
         engine: TranslationEngine.values.firstWhere(
           (e) => e.name == json['engine'],
-          orElse: () => TranslationEngine.google,
+          orElse: () => TranslationEngine.googleFree,
         ),
         themeMode: AppThemeMode.values.firstWhere(
           (e) => e.name == json['themeMode'],
