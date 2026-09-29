@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'base_translator.dart';
+import 'http_client_factory.dart';
 import '../../models/translation_result.dart';
 
 class GoogleFreeTranslator extends BaseTranslator {
@@ -33,11 +34,17 @@ class GoogleFreeTranslator extends BaseTranslator {
       '&q=${Uri.encodeComponent(text)}',
     );
 
+    final client = createHttpClient(
+      proxyHost: proxyHost,
+      proxyPort: proxyPort,
+    );
     try {
-      final response = await http.get(uri);
+      final response = await client.get(uri);
       return _parseResponse(response, text, sourceLang, targetLang);
     } catch (e) {
       throw Exception('Google Free translate error: $e');
+    } finally {
+      client.close();
     }
   }
 

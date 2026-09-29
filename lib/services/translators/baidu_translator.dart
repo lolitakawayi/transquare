@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'base_translator.dart';
+import 'http_client_factory.dart';
 import '../../models/translation_result.dart';
 
 class BaiduTranslator extends BaseTranslator {
@@ -57,11 +58,17 @@ class BaiduTranslator extends BaseTranslator {
       'sign': sign,
     };
 
+    final client = createHttpClient(
+      proxyHost: proxyHost,
+      proxyPort: proxyPort,
+    );
     try {
-      final response = await http.post(uri, headers: headers, body: body);
+      final response = await client.post(uri, headers: headers, body: body);
       return _parseResponse(response, text, sourceLang, targetLang);
     } catch (e) {
       throw Exception('Baidu Translator error: $e');
+    } finally {
+      client.close();
     }
   }
 

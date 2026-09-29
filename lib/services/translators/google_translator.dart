@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'base_translator.dart';
+import 'http_client_factory.dart';
 import '../../models/translation_result.dart';
 
 class GoogleTranslator extends BaseTranslator {
@@ -42,20 +43,15 @@ class GoogleTranslator extends BaseTranslator {
       '&format=text',
     );
 
-    http.Client? client;
+    final client = createHttpClient(
+      proxyHost: proxyHost,
+      proxyPort: proxyPort,
+    );
     try {
-      if (proxyHost != null && proxyPort != null && proxyHost.isNotEmpty) {
-        client = http.Client();
-        final request = http.Request('GET', uri);
-        final streamedResponse = await client.send(request);
-        final response = await http.Response.fromStream(streamedResponse);
-        return _parseResponse(response, text, sourceLang, targetLang);
-      } else {
-        final response = await http.get(uri);
-        return _parseResponse(response, text, sourceLang, targetLang);
-      }
+      final response = await client.get(uri);
+      return _parseResponse(response, text, sourceLang, targetLang);
     } finally {
-      client?.close();
+      client.close();
     }
   }
 
