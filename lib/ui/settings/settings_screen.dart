@@ -347,6 +347,7 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
   final _targetController = TextEditingController();
   final _searchController = TextEditingController();
   String _searchQuery = '';
+  bool _newestFirst = true;
 
   @override
   void dispose() {
@@ -360,9 +361,12 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
   Widget build(BuildContext context) {
     final appProvider = context.watch<AppProvider>();
     final lang = appProvider.settings.language.code;
-    final entries = _searchQuery.isEmpty
+    final rawEntries = _searchQuery.isEmpty
         ? appProvider.glossaryService.entries
         : appProvider.glossaryService.search(_searchQuery);
+    final entries = _newestFirst
+        ? rawEntries.reversed.toList()
+        : rawEntries;
 
     return Column(
       children: [
@@ -440,6 +444,26 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
                 ),
               ),
               const SizedBox(width: 8),
+              IconButton(
+                icon: Icon(
+                  _newestFirst
+                      ? Icons.arrow_downward
+                      : Icons.arrow_upward,
+                  size: 18,
+                ),
+                tooltip: _newestFirst
+                    ? '最新优先 (Latest first)'
+                    : '最早优先 (Oldest first)',
+                onPressed: () =>
+                    setState(() => _newestFirst = !_newestFirst),
+                style: IconButton.styleFrom(
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.1),
+                ),
+              ),
+              const SizedBox(width: 4),
               TextButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.upload, size: 18),

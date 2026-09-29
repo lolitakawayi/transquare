@@ -14,6 +14,7 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   final _searchController = TextEditingController();
   String _searchQuery = '';
+  bool _newestFirst = true;
 
   @override
   void dispose() {
@@ -71,27 +72,70 @@ class _HistoryScreenState extends State<HistoryScreen> {
           final entries = _searchQuery.isEmpty
               ? history.entries
               : history.search(_searchQuery);
+          final sortedEntries = _newestFirst
+              ? entries
+              : entries.reversed.toList();
 
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16),
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: (v) => setState(() => _searchQuery = v),
-                  decoration: InputDecoration(
-                    hintText: L10n.t(lang2, 'history.search_hint'),
-                    prefixIcon: const Icon(Icons.search, size: 18),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (v) => setState(() => _searchQuery = v),
+                        decoration: InputDecoration(
+                          hintText: L10n.t(lang2, 'history.search_hint'),
+                          prefixIcon: const Icon(Icons.search, size: 18),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                        ),
+                      ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
-                  ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      icon: Icon(
+                        _newestFirst
+                            ? Icons.arrow_downward
+                            : Icons.arrow_upward,
+                        size: 18,
+                      ),
+                      tooltip: _newestFirst
+                          ? '最新优先 (Latest first)'
+                          : '最早优先 (Oldest first)',
+                      onPressed: () =>
+                          setState(() => _newestFirst = !_newestFirst),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.1),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                child: Row(
+                  children: [
+                    Text(
+                      '${history.count} ${lang2 == 'zh' ? '条记录' : 'records'}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).disabledColor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
-                child: entries.isEmpty
+                child: sortedEntries.isEmpty
                     ? Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -112,10 +156,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       )
                     : ListView.builder(
                         padding: const EdgeInsets.only(bottom: 80),
-                        itemCount: entries.length,
+                        itemCount: sortedEntries.length,
                         itemBuilder: (context, index) {
                           return _historyCard(
-                              context, entries[index], appProvider);
+                              context, sortedEntries[index], appProvider);
                         },
                       ),
               ),

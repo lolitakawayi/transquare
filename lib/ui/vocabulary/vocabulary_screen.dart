@@ -16,6 +16,7 @@ class _VocabularyScreenState extends State<VocabularyScreen> {
   final _searchController = TextEditingController();
   String _searchQuery = '';
   bool _showOnlyUnmastered = false;
+  bool _newestFirst = true;
 
   @override
   void dispose() {
@@ -67,14 +68,17 @@ class _VocabularyScreenState extends State<VocabularyScreen> {
         builder: (context, appProvider, _) {
           final lang2 = appProvider.settings.language.code;
           final vocab = appProvider.vocabularyService;
-          final entries = _searchQuery.isEmpty
+          final rawEntries = _searchQuery.isEmpty
               ? (_showOnlyUnmastered ? vocab.unmastered : vocab.entries)
               : vocab.search(_searchQuery);
+          final entries = _newestFirst
+              ? rawEntries.reversed.toList()
+              : rawEntries;
 
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: Row(
                   children: [
                     Expanded(
@@ -91,6 +95,26 @@ class _VocabularyScreenState extends State<VocabularyScreen> {
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 10),
                         ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      icon: Icon(
+                        _newestFirst
+                            ? Icons.arrow_downward
+                            : Icons.arrow_upward,
+                        size: 18,
+                      ),
+                      tooltip: _newestFirst
+                          ? '最新优先 (Latest first)'
+                          : '最早优先 (Oldest first)',
+                      onPressed: () =>
+                          setState(() => _newestFirst = !_newestFirst),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.1),
                       ),
                     ),
                     const SizedBox(width: 8),
