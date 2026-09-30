@@ -6,6 +6,7 @@ import 'providers/app_provider.dart';
 import 'ui/settings/settings_screen.dart';
 import 'ui/vocabulary/vocabulary_screen.dart';
 import 'ui/history/history_screen.dart';
+import 'ui/favorites/favorites_screen.dart';
 import 'ui/floating_window.dart';
 import 'l10n/strings.dart';
 
@@ -222,6 +223,11 @@ class _TransquareAppState extends State<TransquareApp>
                 label: Text(L10n.t(lang, 'app.history')),
               ),
               NavigationRailDestination(
+                icon: const Icon(Icons.star_outline),
+                selectedIcon: const Icon(Icons.star),
+                label: Text(L10n.t(lang, 'app.favorites')),
+              ),
+              NavigationRailDestination(
                 icon: const Icon(Icons.menu_book_outlined),
                 selectedIcon: const Icon(Icons.menu_book),
                 label: Text(L10n.t(lang, 'app.vocabulary')),
@@ -254,8 +260,10 @@ class _TransquareAppState extends State<TransquareApp>
       case 1:
         return const HistoryScreen();
       case 2:
-        return const VocabularyScreen();
+        return const FavoritesScreen();
       case 3:
+        return const VocabularyScreen();
+      case 4:
         return const SettingsScreen();
       default:
         return _buildHomePage();

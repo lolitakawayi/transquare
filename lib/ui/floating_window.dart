@@ -131,12 +131,11 @@ class _FloatingWindowState extends State<FloatingWindow> {
                     Expanded(
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                        // 根据 _showSideBySide 切换展示模式
                         child: _showSideBySide
                             ? SideBySideView(
-                                result: appProvider.currentResult!) // 并排对比视图
+                                result: appProvider.currentResult!)
                             : TranslationCard(
-                                result: appProvider.currentResult!), // 卡片视图
+                                result: appProvider.currentResult!),
                       ),
                     )
                   else

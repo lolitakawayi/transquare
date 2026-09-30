@@ -29,6 +29,7 @@ class L10n {
     'app.listening_disabled': '监听已关闭',
     'app.home': '首页',
     'app.history': '历史',
+    'app.favorites': '收藏',
     'app.vocabulary': '生词本',
     'app.settings': '设置',
     'app.quick_translate': '快速翻译',
@@ -54,10 +55,16 @@ class L10n {
     'history.confirm_clear': '确定清空全部历史记录？',
     'history.cancel': '取消',
     'history.confirm': '确定',
-    'history.copy': '已复制',
+    'history.copy': '复制',
     'history.engine': '引擎',
     'history.cached': '缓存',
     'history.live': '实时',
+
+    // Favorites
+    'favorites.title': '收藏',
+    'favorites.search_hint': '搜索收藏...',
+    'favorites.empty': '暂无收藏',
+    'favorites.unfavorite': '取消收藏',
 
     // Vocabulary
     'vocab.title': '生词本',
@@ -148,6 +155,8 @@ class L10n {
     'card.copy_success': '译文已复制到剪贴板',
     'card.add_to_vocabulary': '加入生词本',
     'card.vocab_success': '已添加到生词本',
+    'card.favorite': '收藏并加入生词本',
+    'card.favorite_success': '已收藏并加入生词本',
 
     // Side by side
     'sbs.original': '原文',
@@ -184,6 +193,7 @@ class L10n {
     'app.listening_disabled': 'Listening disabled',
     'app.home': 'Home',
     'app.history': 'History',
+    'app.favorites': 'Favorites',
     'app.vocabulary': 'Vocabulary',
     'app.settings': 'Settings',
     'app.quick_translate': 'Quick Translate',
@@ -213,6 +223,12 @@ class L10n {
     'history.engine': 'Engine',
     'history.cached': 'cached',
     'history.live': 'live',
+
+    // Favorites
+    'favorites.title': 'Favorites',
+    'favorites.search_hint': 'Search favorites...',
+    'favorites.empty': 'No favorites',
+    'favorites.unfavorite': 'Remove from favorites',
 
     // Vocabulary
     'vocab.title': 'Vocabulary',
@@ -303,6 +319,8 @@ class L10n {
     'card.copy_success': 'Translation copied',
     'card.add_to_vocabulary': 'Add to vocabulary',
     'card.vocab_success': 'Added to vocabulary',
+    'card.favorite': 'Favorite & add to vocabulary',
+    'card.favorite_success': 'Favorited & added to vocabulary',
 
     // Side by side
     'sbs.original': 'Original',

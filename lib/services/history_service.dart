@@ -11,12 +11,15 @@ class HistoryService {
   bool _dirty = false;
   int maxSize = 100;
 
-  List<HistoryEntry> get entries => List.unmodifiable(_entries);
+  List<HistoryEntry> get entries =>
+      List.unmodifiable(_entries.where((e) => !e.isFavorite));
 
   List<HistoryEntry> get favorites =>
-      _entries.where((e) => e.isFavorite).toList();
+      List.unmodifiable(_entries.where((e) => e.isFavorite));
 
-  int get count => _entries.length;
+  int get count => entries.length;
+
+  int get favoritesCount => favorites.length;
 
   void addEntry(TranslationResult result) {
     final entry = HistoryEntry(
@@ -25,10 +28,21 @@ class HistoryService {
     );
     _entries.insert(0, entry);
 
-    while (_entries.length > maxSize) {
-      _entries.removeLast();
-    }
+    _trimNonFavorites();
     _dirty = true;
+  }
+
+  void _trimNonFavorites() {
+    final nonFavCount = _entries.where((e) => !e.isFavorite).length;
+    int excess = nonFavCount - maxSize;
+    if (excess <= 0) return;
+
+    for (int i = _entries.length - 1; i >= 0 && excess > 0; i--) {
+      if (!_entries[i].isFavorite) {
+        _entries.removeAt(i);
+        excess--;
+      }
+    }
   }
 
   void toggleFavorite(String id) {
@@ -41,13 +55,37 @@ class HistoryService {
     }
   }
 
+  void addToFavorites(String id) {
+    final index = _entries.indexWhere((e) => e.id == id);
+    if (index >= 0) {
+      _entries[index] = _entries[index].copyWith(isFavorite: true);
+      _dirty = true;
+    }
+  }
+
+  void favoriteLatest() {
+    if (_entries.isEmpty) return;
+    _entries[0] = _entries[0].copyWith(isFavorite: true);
+    _dirty = true;
+  }
+
+  void removeFromFavorites(String id) {
+    final index = _entries.indexWhere((e) => e.id == id);
+    if (index >= 0) {
+      final entry = _entries[index].copyWith(isFavorite: false);
+      _entries.removeAt(index);
+      _entries.insert(0, entry);
+      _dirty = true;
+    }
+  }
+
   void removeEntry(String id) {
     _entries.removeWhere((e) => e.id == id);
     _dirty = true;
   }
 
   void clearAll() {
-    _entries.clear();
+    _entries.removeWhere((e) => !e.isFavorite);
     _dirty = true;
   }
 
@@ -55,8 +93,19 @@ class HistoryService {
     final lower = query.toLowerCase();
     return _entries
         .where((e) =>
-            e.result.sourceText.toLowerCase().contains(lower) ||
-            e.result.translatedText.toLowerCase().contains(lower))
+            !e.isFavorite &&
+            (e.result.sourceText.toLowerCase().contains(lower) ||
+                e.result.translatedText.toLowerCase().contains(lower)))
+        .toList();
+  }
+
+  List<HistoryEntry> searchFavorites(String query) {
+    final lower = query.toLowerCase();
+    return _entries
+        .where((e) =>
+            e.isFavorite &&
+            (e.result.sourceText.toLowerCase().contains(lower) ||
+                e.result.translatedText.toLowerCase().contains(lower)))
         .toList();
   }
 

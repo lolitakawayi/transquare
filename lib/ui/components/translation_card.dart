@@ -9,12 +9,12 @@ import '../../l10n/strings.dart'; // 国际化字符串支持
 ///
 /// 以纵向卡片形式展示单条翻译结果，包含原文、译文、
 /// 翻译引擎标识、语言方向、缓存/实时标签以及底部操作按钮。
-/// 支持 compact 紧凑模式（隐藏头部和底部）。
+/// compact 模式仅隐藏头部标签栏，底部操作栏始终显示。
 class TranslationCard extends StatelessWidget {
   /// 翻译结果数据
   final TranslationResult result;
 
-  /// 是否使用紧凑模式（隐藏头部标签栏和底部操作栏）
+  /// 是否使用紧凑模式（隐藏头部标签栏，底部操作栏始终显示）
   final bool compact;
 
   const TranslationCard({
@@ -43,11 +43,8 @@ class TranslationCard extends StatelessWidget {
           const SizedBox(height: 8),
           // 译文展示区域
           _buildTranslatedText(context, isDark, primaryColor),
-          // 紧凑模式下隐藏底部操作栏
-          if (!compact) ...[
-            const SizedBox(height: 12),
-            _buildFooter(context),
-          ],
+          const SizedBox(height: 12),
+          _buildFooter(context),
         ],
       ),
     );
@@ -210,7 +207,7 @@ class TranslationCard extends StatelessWidget {
 
   /// 构建底部操作栏
   ///
-  /// 包含语音朗读、复制译文和添加到生词本三个操作按钮。
+  /// 包含语音朗读、复制译文、添加到生词本和收藏四个操作按钮。
   Widget _buildFooter(BuildContext context) {
     final lang = context.read<AppProvider>().settings.language.code;
     return Row(
@@ -223,7 +220,6 @@ class TranslationCard extends StatelessWidget {
           tooltip: L10n.t(lang, 'tts.play'),
           onTap: () {
             final appProvider = context.read<AppProvider>();
-            // 使用 targetLang 推断朗读语言
             final langCode = _getTtsLanguageCode(result.targetLang);
             appProvider.ttsService.speak(result.translatedText, language: langCode);
           },
@@ -235,12 +231,8 @@ class TranslationCard extends StatelessWidget {
           icon: Icons.content_copy_outlined,
           tooltip: L10n.t(lang, 'card.copy_translation'),
           onTap: () {
-            final appProvider =
-                context.read<AppProvider>();
-            // 将译文复制到系统剪贴板
             Clipboard.setData(
                 ClipboardData(text: result.translatedText));
-            // 显示复制成功的提示
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(L10n.t(lang, 'card.copy_success')),
@@ -256,11 +248,8 @@ class TranslationCard extends StatelessWidget {
           icon: Icons.bookmark_outline,
           tooltip: L10n.t(lang, 'card.add_to_vocabulary'),
           onTap: () {
-            final appProvider =
-                context.read<AppProvider>();
-            // 将当前翻译结果添加到生词本
+            final appProvider = context.read<AppProvider>();
             appProvider.addToVocabulary(result);
-            // 显示添加成功的提示
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(L10n.t(lang, 'card.vocab_success')),
@@ -269,7 +258,25 @@ class TranslationCard extends StatelessWidget {
             );
           },
         ),
-        
+        const SizedBox(width: 4),
+        // 收藏按钮：收藏到收藏夹并加入生词本
+        _actionButton(
+          context,
+          icon: Icons.star_outline,
+          tooltip: L10n.t(lang, 'card.favorite'),
+          onTap: () {
+            final appProvider = context.read<AppProvider>();
+            appProvider.historyService.favoriteLatest();
+            appProvider.historyService.save();
+            appProvider.addToVocabulary(result);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(L10n.t(lang, 'card.favorite_success')),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
