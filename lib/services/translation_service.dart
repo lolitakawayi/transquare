@@ -145,7 +145,10 @@ class TranslationService {
       glossary: glossary,
     );
 
-    final finalResult = result.copyWith(translatedText: postProcessed);
+    final finalResult = result.copyWith(
+      translatedText: postProcessed,
+      sourceText: text, // 还原原始文本，而非含占位符的预处理文本
+    );
 
     if (useCache) {
       cache.set(cacheKey, finalResult);

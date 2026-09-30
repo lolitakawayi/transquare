@@ -105,11 +105,11 @@ class TextProcessor {
       processed = protectCitations(processed);
     }
     if (glossary != null && glossary.isNotEmpty) {
+      var idx = 0;
       for (final entry in glossary.entries) {
-        processed = processed.replaceAll(
-          entry.key,
-          '<GLOSSARY_${entry.key.hashCode}>',
-        );
+        final token = 'ZGLSTOKEN${idx}Z';
+        processed = processed.replaceAll(entry.key, token);
+        idx++;
       }
     }
     return processed;
@@ -123,10 +123,12 @@ class TextProcessor {
     result = unprotectFormulas(result);
     result = unprotectCitations(result);
     if (glossary != null && glossary.isNotEmpty) {
+      var idx = 0;
       for (final entry in glossary.entries) {
         final expected = entry.value;
-        final placeholder = '<GLOSSARY_${entry.key.hashCode}>';
-        result = result.replaceAll(placeholder, expected);
+        final token = 'ZGLSTOKEN${idx}Z';
+        result = result.replaceAll(token, expected);
+        idx++;
       }
     }
     return result;
