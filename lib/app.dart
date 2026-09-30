@@ -339,7 +339,7 @@ class _TransquareAppState extends State<TransquareApp>
                     context,
                     icon: Icons.settings,
                     label: L10n.t(lang, 'app.settings'),
-                    onTap: () => setState(() => _currentIndex = 3),
+                    onTap: () => setState(() => _currentIndex = 4), // 设置 = 索引4
                   ),
                   const SizedBox(width: 16),
                   _quickAction(
