@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // 系统服务（剪贴板 Clipboard）
 import 'package:provider/provider.dart';
 import '../../models/translation_result.dart';
 import '../../providers/app_provider.dart';
@@ -122,8 +123,124 @@ class SideBySideView extends StatelessWidget {
               ),
             );
           }),
+          const SizedBox(height: 12),
+          _buildFooter(context, result),
         ],
       ),
     );
+  }
+
+  /// 构建底部操作栏（与 TranslationCard 保持一致）
+  Widget _buildFooter(BuildContext context, TranslationResult result) {
+    final lang = context.read<AppProvider>().settings.language.code;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        _actionButton(
+          context,
+          icon: Icons.volume_up_outlined,
+          tooltip: L10n.t(lang, 'tts.play'),
+          onTap: () {
+            final appProvider = context.read<AppProvider>();
+            final langCode = _getTtsLanguageCode(result.targetLang);
+            appProvider.ttsService.speak(result.translatedText, language: langCode);
+          },
+        ),
+        const SizedBox(width: 4),
+        _actionButton(
+          context,
+          icon: Icons.content_copy_outlined,
+          tooltip: L10n.t(lang, 'card.copy_translation'),
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: result.translatedText));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(L10n.t(lang, 'card.copy_success')),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          },
+        ),
+        const SizedBox(width: 4),
+        _actionButton(
+          context,
+          icon: Icons.bookmark_outline,
+          tooltip: L10n.t(lang, 'card.add_to_vocabulary'),
+          onTap: () {
+            context.read<AppProvider>().addToVocabulary(result);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(L10n.t(lang, 'card.vocab_success')),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          },
+        ),
+        const SizedBox(width: 4),
+        _actionButton(
+          context,
+          icon: Icons.star_outline,
+          tooltip: L10n.t(lang, 'card.favorite'),
+          onTap: () {
+            final appProvider = context.read<AppProvider>();
+            appProvider.historyService.favoriteLatest();
+            appProvider.historyService.save();
+            appProvider.addToVocabulary(result);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(L10n.t(lang, 'card.favorite_success')),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _actionButton(
+    BuildContext context, {
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onTap,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(6),
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.04),
+          ),
+          child: Icon(
+            icon,
+            size: 16,
+            color: isDark ? Colors.white54 : Colors.black54,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _getTtsLanguageCode(String langCode) {
+    switch (langCode) {
+      case 'zh': return 'zh-CN';
+      case 'en': return 'en-US';
+      case 'ja': return 'ja-JP';
+      case 'ko': return 'ko-KR';
+      case 'fr': return 'fr-FR';
+      case 'de': return 'de-DE';
+      case 'es': return 'es-ES';
+      case 'pt': return 'pt-BR';
+      case 'ru': return 'ru-RU';
+      case 'ar': return 'ar-SA';
+      default: return 'en-US';
+    }
   }
 }
