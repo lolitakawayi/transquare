@@ -182,8 +182,22 @@ void _syncMiddleMouseSetting(AppProvider appProvider) {
   final enabled = appProvider.settings.enableMiddleMouse;
   PlatformService.setMiddleMouseEnabled(enabled);
 
+  // 缓存当前快捷键配置，变更时重新注册
+  String _lastModifiers = appProvider.settings.hotkeyModifiers;
+  String _lastKey = appProvider.settings.hotkeyKey;
+
   appProvider.addListener(() {
     final newEnabled = appProvider.settings.enableMiddleMouse;
-    PlatformService.setMiddleMouseEnabled(newEnabled);
+    if (newEnabled != enabled) {
+      PlatformService.setMiddleMouseEnabled(newEnabled);
+    }
+
+    final newModifiers = appProvider.settings.hotkeyModifiers;
+    final newKey = appProvider.settings.hotkeyKey;
+    if (newModifiers != _lastModifiers || newKey != _lastKey) {
+      _lastModifiers = newModifiers;
+      _lastKey = newKey;
+      _registerHotKeys(appProvider);
+    }
   });
 }
