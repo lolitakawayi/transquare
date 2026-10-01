@@ -48,6 +48,8 @@ void main() async {
 
   await _globalAppProvider!.initialize();
 
+  PlatformService.setWindowOpacity(_globalAppProvider!.settings.windowOpacity);
+
   _setupNativeHotkeyListener();
 
   await _initializeSystemTray();
@@ -182,9 +184,10 @@ void _syncMiddleMouseSetting(AppProvider appProvider) {
   final enabled = appProvider.settings.enableMiddleMouse;
   PlatformService.setMiddleMouseEnabled(enabled);
 
-  // 缓存当前快捷键配置，变更时重新注册
+  // 缓存当前设置值，变更时同步到平台层
   String _lastModifiers = appProvider.settings.hotkeyModifiers;
   String _lastKey = appProvider.settings.hotkeyKey;
+  double _lastOpacity = appProvider.settings.windowOpacity;
 
   appProvider.addListener(() {
     final newEnabled = appProvider.settings.enableMiddleMouse;
@@ -198,6 +201,12 @@ void _syncMiddleMouseSetting(AppProvider appProvider) {
       _lastModifiers = newModifiers;
       _lastKey = newKey;
       _registerHotKeys(appProvider);
+    }
+
+    final newOpacity = appProvider.settings.windowOpacity;
+    if (newOpacity != _lastOpacity) {
+      _lastOpacity = newOpacity;
+      PlatformService.setWindowOpacity(newOpacity);
     }
   });
 }
