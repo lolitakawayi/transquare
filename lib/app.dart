@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 import 'models/settings.dart';
 import 'providers/app_provider.dart';
@@ -56,8 +57,14 @@ class _TransquareAppState extends State<TransquareApp>
   }
 
   void showFloatingWindow([String? text]) async {
+    final prefs = await SharedPreferences.getInstance();
+    var width = prefs.getDouble('float_window_width') ?? 520;
+    var height = prefs.getDouble('float_window_height') ?? 360;
+    width = width.clamp(300, 3000);
+    height = height.clamp(200, 3000);
+
     await windowManager.setMinimumSize(const Size(300, 200));
-    await windowManager.setSize(const Size(520, 360));
+    await windowManager.setSize(Size(width, height));
     await windowManager.center();
     await windowManager.setAlwaysOnTop(true);
     await windowManager.setBackgroundColor(Colors.transparent);
@@ -74,6 +81,11 @@ class _TransquareAppState extends State<TransquareApp>
   }
 
   void _closeFloatingWindow() async {
+    final currentSize = await windowManager.getSize();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('float_window_width', currentSize.width);
+    await prefs.setDouble('float_window_height', currentSize.height);
+
     await windowManager.setAlwaysOnTop(false);
     await windowManager.setMinimumSize(const Size(600, 400));
     await windowManager.setSize(const Size(800, 600));
