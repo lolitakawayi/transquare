@@ -497,14 +497,15 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
               ),
               const SizedBox(width: 8),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_sourceController.text.isNotEmpty &&
                       _targetController.text.isNotEmpty) {
                     appProvider.glossaryService.addEntry(
                       sourceTerm: _sourceController.text,
                       targetTerm: _targetController.text,
                     );
-                    appProvider.glossaryService.save();
+                    appProvider.notifyGlossaryChanged();
+                    await appProvider.glossaryService.save();
                     _sourceController.clear();
                     _targetController.clear();
                   }
@@ -606,11 +607,11 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
                       subtitle: Text(entry.targetTerm),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete_outline, size: 18),
-                        onPressed: () {
+                        onPressed: () async {
                           appProvider.glossaryService
                               .removeEntry(entry.id);
-                          appProvider.glossaryService.save();
                           appProvider.notifyGlossaryChanged();
+                          await appProvider.glossaryService.save();
                         },
                       ),
                     );
