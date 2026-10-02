@@ -49,6 +49,14 @@ class TextProcessor {
     String result = text;
     for (final pattern in _formulaPatterns) {
       result = result.replaceAllMapped(pattern, (match) {
+        final prefix = result.substring(0, match.start);
+        final formulaOpens = '<FORMULA>'.allMatches(prefix).length;
+        final formulaCloses = '</FORMULA>'.allMatches(prefix).length;
+        final citeOpens = '<CITE>'.allMatches(prefix).length;
+        final citeCloses = '</CITE>'.allMatches(prefix).length;
+        if (formulaOpens > formulaCloses || citeOpens > citeCloses) {
+          return match.group(0)!;
+        }
         return '<FORMULA>${match.group(0)}</FORMULA>';
       });
     }
@@ -78,6 +86,14 @@ class TextProcessor {
     String result = text;
     for (final pattern in _citationPatterns) {
       result = result.replaceAllMapped(pattern, (match) {
+        final prefix = result.substring(0, match.start);
+        final formulaOpens = '<FORMULA>'.allMatches(prefix).length;
+        final formulaCloses = '</FORMULA>'.allMatches(prefix).length;
+        final citeOpens = '<CITE>'.allMatches(prefix).length;
+        final citeCloses = '</CITE>'.allMatches(prefix).length;
+        if (formulaOpens > formulaCloses || citeOpens > citeCloses) {
+          return match.group(0)!;
+        }
         return '<CITE>${match.group(0)}</CITE>';
       });
     }
@@ -105,8 +121,10 @@ class TextProcessor {
       processed = protectCitations(processed);
     }
     if (glossary != null && glossary.isNotEmpty) {
+      final sortedEntries = glossary.entries.toList()
+        ..sort((a, b) => b.key.length.compareTo(a.key.length));
       var idx = 0;
-      for (final entry in glossary.entries) {
+      for (final entry in sortedEntries) {
         final token = 'ZGLSTOKEN${idx}Z';
         processed = processed.replaceAll(entry.key, token);
         idx++;
@@ -123,8 +141,10 @@ class TextProcessor {
     result = unprotectFormulas(result);
     result = unprotectCitations(result);
     if (glossary != null && glossary.isNotEmpty) {
+      final sortedEntries = glossary.entries.toList()
+        ..sort((a, b) => b.key.length.compareTo(a.key.length));
       var idx = 0;
-      for (final entry in glossary.entries) {
+      for (final entry in sortedEntries) {
         final expected = entry.value;
         final token = 'ZGLSTOKEN${idx}Z';
         result = result.replaceAll(token, expected);
