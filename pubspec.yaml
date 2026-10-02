@@ -2,6 +2,9 @@ name: transquare
 description: "A powerful translation tool for academic reading on Windows."
 publish_to: 'none'
 version: 1.0.0+1
+homepage: https://github.com/lolitakawayi/transquare
+repository: https://github.com/lolitakawayi/transquare
+issue_tracker: https://github.com/lolitakawayi/transquare/issues
 
 environment:
   sdk: ^3.13.0

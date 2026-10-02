@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "transquare" "\0"
+            VALUE "CompanyName", "transquare" "\0"
+            VALUE "FileDescription", "Academic Translation Assistant" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "transquare" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 lolitakawayi. All rights reserved." "\0"
             VALUE "OriginalFilename", "transquare.exe" "\0"
-            VALUE "ProductName", "transquare" "\0"
+            VALUE "ProductName", "Transquare" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
