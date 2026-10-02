@@ -22,8 +22,15 @@ dependencies:
   shared_preferences: ^2.5.3
   path_provider: ^2.1.5
 
-  # CSV parsing for glossary/vocabulary import/export
-  csv: ^6.0.0
+  # Excel (xlsx) import/export for glossary
+  excel: ^4.0.6
+
+  # Low-level xlsx parsing (avoids excel package strict validation bugs)
+  archive: ^3.6.1
+  xml: ^6.6.1
+
+  # File picker for import/export dialogs
+  file_picker: ^8.0.0
 
   # Window management (frameless, always-on-top, multi-window)
   window_manager: ^0.5.1

@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:file_picker/file_picker.dart';
 import '../../models/settings.dart' as models;
 import '../../providers/app_provider.dart';
 import '../../l10n/strings.dart';
@@ -377,6 +379,78 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
     super.dispose();
   }
 
+  Future<void> _importXlsx() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx'],
+      );
+      if (result == null || result.files.isEmpty) return;
+
+      final file = File(result.files.single.path!);
+      final bytes = await file.readAsBytes();
+      final appProvider = context.read<AppProvider>();
+      final count = await appProvider.glossaryService.importXlsx(bytes);
+      appProvider.glossaryService.save();
+      appProvider.notifyGlossaryChanged();
+
+      if (mounted) {
+        final lang = appProvider.settings.language.code;
+        setState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${L10n.t(lang, 'glossary.import_success')}: $count'),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        final lang = context.read<AppProvider>().settings.language.code;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(lang == 'zh' ? '导入失败：$e' : 'Import failed: $e'),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _exportXlsx() async {
+    try {
+      final appProvider = context.read<AppProvider>();
+      final bytes = appProvider.glossaryService.exportXlsx();
+      final lang = appProvider.settings.language.code;
+
+      final path = await FilePicker.platform.saveFile(
+        dialogTitle: lang == 'zh' ? '保存术语表' : 'Save Glossary',
+        fileName: 'glossary.xlsx',
+        type: FileType.custom,
+        allowedExtensions: ['xlsx'],
+      );
+      if (path == null) return;
+
+      final file = File(path);
+      await file.writeAsBytes(bytes);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(lang == 'zh' ? '导出成功' : 'Export successful'),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        final lang = context.read<AppProvider>().settings.language.code;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(lang == 'zh' ? '导出失败：$e' : 'Export failed: $e'),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final appProvider = context.watch<AppProvider>();
@@ -485,13 +559,13 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
               ),
               const SizedBox(width: 4),
               TextButton.icon(
-                onPressed: () {},
+                onPressed: _importXlsx,
                 icon: const Icon(Icons.upload, size: 18),
                 label: Text(L10n.t(lang, 'glossary.import')),
               ),
               const SizedBox(width: 4),
               TextButton.icon(
-                onPressed: () {},
+                onPressed: _exportXlsx,
                 icon: const Icon(Icons.download, size: 18),
                 label: Text(L10n.t(lang, 'glossary.export')),
               ),
@@ -536,7 +610,7 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
                           appProvider.glossaryService
                               .removeEntry(entry.id);
                           appProvider.glossaryService.save();
-                          appProvider.notifyListeners();
+                          appProvider.notifyGlossaryChanged();
                         },
                       ),
                     );

@@ -157,6 +157,10 @@ AppProvider({
     notifyListeners();
   }
 
+  void notifyGlossaryChanged() {
+    notifyListeners();
+  }
+
   Future<void> translate(String text) async {
     if (text.trim().isEmpty) return;
 

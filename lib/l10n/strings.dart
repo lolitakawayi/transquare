@@ -121,7 +121,7 @@ class L10n {
 
     // Settings - Glossary
     'glossary.title': '术语表',
-    'glossary.import': '导入 CSV',
+    'glossary.import': '导入 XLSX',
     'glossary.export': '导出',
     'glossary.add': '添加',
     'glossary.source': '原文',
@@ -285,7 +285,7 @@ class L10n {
 
     // Settings - Glossary
     'glossary.title': 'Glossary',
-    'glossary.import': 'Import CSV',
+    'glossary.import': 'Import XLSX',
     'glossary.export': 'Export',
     'glossary.add': 'Add',
     'glossary.source': 'Source',
