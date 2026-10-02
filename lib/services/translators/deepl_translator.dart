@@ -5,7 +5,7 @@ import 'http_client_factory.dart';
 import '../../models/translation_result.dart';
 
 class DeepLTranslator extends BaseTranslator {
-  String? _apiKey;
+  final String? _apiKey;
   final bool _isFree;
 
   DeepLTranslator({String? apiKey, bool isFree = true})
@@ -37,7 +37,7 @@ class DeepLTranslator extends BaseTranslator {
     String? proxyHost,
     int? proxyPort,
   }) async {
-    if (_apiKey == null || _apiKey!.isEmpty) {
+    if (_apiKey == null || _apiKey.isEmpty) {
       throw Exception('DeepL API Key is required.');
     }
 

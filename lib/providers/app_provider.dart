@@ -5,13 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/settings.dart';
 import '../models/translation_result.dart';
 import '../services/translation_service.dart';
-import '../services/cache_service.dart';
 import '../services/glossary_service.dart';
 import '../services/vocabulary_service.dart';
 import '../services/history_service.dart';
 import '../services/text_processor.dart';
 import '../services/tts_service.dart';
-import '../l10n/strings.dart';
 
 class AppProvider extends ChangeNotifier {
   AppSettings _settings = const AppSettings();
@@ -159,6 +157,10 @@ AppProvider({
   }
 
   void notifyGlossaryChanged() {
+    notifyListeners();
+  }
+
+  void notifyHistoryChanged() {
     notifyListeners();
   }
 

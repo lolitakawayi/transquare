@@ -5,8 +5,8 @@ import 'http_client_factory.dart';
 import '../../models/translation_result.dart';
 
 class BaiduTranslator extends BaseTranslator {
-  String? _appId;
-  String? _secretKey;
+  final String? _appId;
+  final String? _secretKey;
 
   BaiduTranslator({String? appId, String? secretKey})
       : _appId = appId,
@@ -34,7 +34,7 @@ class BaiduTranslator extends BaseTranslator {
     int? proxyPort,
   }) async {
     if (_appId == null || _secretKey == null ||
-        _appId!.isEmpty || _secretKey!.isEmpty) {
+        _appId.isEmpty || _secretKey.isEmpty) {
       throw Exception(
         'Baidu Translator requires App ID and Secret Key. Please configure them in settings.',
       );
@@ -53,7 +53,7 @@ class BaiduTranslator extends BaseTranslator {
       'q': text,
       'from': sourceLang == 'auto' ? 'auto' : sourceLang,
       'to': targetLang,
-      'appid': _appId!,
+      'appid': _appId,
       'salt': salt,
       'sign': sign,
     };
@@ -73,7 +73,7 @@ class BaiduTranslator extends BaseTranslator {
   }
 
   String _generateSign(String query, String salt) {
-    final raw = '${_appId}$query$salt$_secretKey';
+    final raw = '$_appId$query$salt$_secretKey';
     final bytes = utf8.encode(raw);
     final digest = _md5(bytes);
     return digest;

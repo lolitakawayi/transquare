@@ -224,7 +224,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               onPressed: () {
                 appProvider.historyService.addToFavorites(entry.id);
                 appProvider.historyService.save();
-                appProvider.notifyListeners();
+                appProvider.notifyHistoryChanged();
               },
             ),
             IconButton(
@@ -232,7 +232,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               onPressed: () {
                 appProvider.historyService.removeEntry(entry.id);
                 appProvider.historyService.save();
-                appProvider.notifyListeners();
+                appProvider.notifyHistoryChanged();
               },
             ),
           ],

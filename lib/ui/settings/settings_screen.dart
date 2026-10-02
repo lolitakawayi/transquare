@@ -87,57 +87,65 @@ class EngineSettingsTab extends StatelessWidget {
       children: [
         _sectionHeader(L10n.t(lang, 'engine.title')),
         const SizedBox(height: 12),
-        _engineOption(
-          context,
-          title: L10n.t(lang, 'engine.google'),
-          subtitle: L10n.t(lang, 'engine.google_desc'),
-          value: models.TranslationEngine.google,
+        RadioGroup<models.TranslationEngine>(
           groupValue: settings.engine,
-          onChanged: (v) => appProvider.setEngine(v!),
-        ),
-        _engineOption(
-          context,
-          title: L10n.t(lang, 'engine.microsoft'),
-          subtitle: L10n.t(lang, 'engine.microsoft_desc'),
-          value: models.TranslationEngine.microsoft,
-          groupValue: settings.engine,
-          onChanged: (v) => appProvider.setEngine(v!),
-        ),
-        _engineOption(
-          context,
-          title: L10n.t(lang, 'engine.deepl'),
-          subtitle: L10n.t(lang, 'engine.deepl_desc'),
-          value: models.TranslationEngine.deepl,
-          groupValue: settings.engine,
-          onChanged: (v) => appProvider.setEngine(v!),
-        ),
-        _engineOption(
-          context,
-          title: L10n.t(lang, 'engine.baidu'),
-          subtitle: L10n.t(lang, 'engine.baidu_desc'),
-          value: models.TranslationEngine.baidu,
-          groupValue: settings.engine,
-          onChanged: (v) => appProvider.setEngine(v!),
+          onChanged: (v) {
+            if (v != null) appProvider.setEngine(v);
+          },
+          child: Column(
+            children: [
+              _engineOption(
+                context,
+                title: L10n.t(lang, 'engine.google'),
+                subtitle: L10n.t(lang, 'engine.google_desc'),
+                value: models.TranslationEngine.google,
+              ),
+              _engineOption(
+                context,
+                title: L10n.t(lang, 'engine.microsoft'),
+                subtitle: L10n.t(lang, 'engine.microsoft_desc'),
+                value: models.TranslationEngine.microsoft,
+              ),
+              _engineOption(
+                context,
+                title: L10n.t(lang, 'engine.deepl'),
+                subtitle: L10n.t(lang, 'engine.deepl_desc'),
+                value: models.TranslationEngine.deepl,
+              ),
+              _engineOption(
+                context,
+                title: L10n.t(lang, 'engine.baidu'),
+                subtitle: L10n.t(lang, 'engine.baidu_desc'),
+                value: models.TranslationEngine.baidu,
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 16),
         _sectionHeader(
           lang == 'zh' ? '免费引擎 ' : 'Free Engines '),
         const SizedBox(height: 12),
-        _engineOption(
-          context,
-          title: L10n.t(lang, 'engine.google_free'),
-          subtitle: L10n.t(lang, 'engine.google_free_desc'),
-          value: models.TranslationEngine.googleFree,
+        RadioGroup<models.TranslationEngine>(
           groupValue: settings.engine,
-          onChanged: (v) => appProvider.setEngine(v!),
-        ),
-        _engineOption(
-          context,
-          title: L10n.t(lang, 'engine.mymemory'),
-          subtitle: L10n.t(lang, 'engine.mymemory_desc'),
-          value: models.TranslationEngine.mymemory,
-          groupValue: settings.engine,
-          onChanged: (v) => appProvider.setEngine(v!),
+          onChanged: (v) {
+            if (v != null) appProvider.setEngine(v);
+          },
+          child: Column(
+            children: [
+              _engineOption(
+                context,
+                title: L10n.t(lang, 'engine.google_free'),
+                subtitle: L10n.t(lang, 'engine.google_free_desc'),
+                value: models.TranslationEngine.googleFree,
+              ),
+              _engineOption(
+                context,
+                title: L10n.t(lang, 'engine.mymemory'),
+                subtitle: L10n.t(lang, 'engine.mymemory_desc'),
+                value: models.TranslationEngine.mymemory,
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 24),
         _sectionHeader(L10n.t(lang, 'engine.api_key')),
@@ -380,6 +388,7 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
   }
 
   Future<void> _importXlsx() async {
+    final appProvider = context.read<AppProvider>();
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -389,7 +398,6 @@ class _GlossarySettingsTabState extends State<GlossarySettingsTab> {
 
       final file = File(result.files.single.path!);
       final bytes = await file.readAsBytes();
-      final appProvider = context.read<AppProvider>();
       final count = await appProvider.glossaryService.importXlsx(bytes);
       appProvider.glossaryService.save();
       appProvider.notifyGlossaryChanged();
@@ -646,33 +654,31 @@ class AppearanceSettingsTab extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Column(
-            children: [
-              RadioListTile<models.AppLanguage>(
-                title: Text(L10n.t(lang, 'settings.language_zh')),
-                subtitle: const Text('简体中文'),
-                value: models.AppLanguage.chinese,
-                groupValue: settings.language,
-                onChanged: (v) {
-                  if (v != null) appProvider.setLanguage(v);
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+          child: RadioGroup<models.AppLanguage>(
+            groupValue: settings.language,
+            onChanged: (v) {
+              if (v != null) appProvider.setLanguage(v);
+            },
+            child: Column(
+              children: [
+                RadioListTile<models.AppLanguage>(
+                  title: Text(L10n.t(lang, 'settings.language_zh')),
+                  subtitle: const Text('简体中文'),
+                  value: models.AppLanguage.chinese,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-              RadioListTile<models.AppLanguage>(
-                title: Text(L10n.t(lang, 'settings.language_en')),
-                subtitle: const Text('English'),
-                value: models.AppLanguage.english,
-                groupValue: settings.language,
-                onChanged: (v) {
-                  if (v != null) appProvider.setLanguage(v);
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                RadioListTile<models.AppLanguage>(
+                  title: Text(L10n.t(lang, 'settings.language_en')),
+                  subtitle: const Text('English'),
+                  value: models.AppLanguage.english,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 24),
@@ -680,29 +686,32 @@ class AppearanceSettingsTab extends StatelessWidget {
         // ── Theme ──
         _sectionHeader(L10n.t(lang, 'appearance.theme')),
         const SizedBox(height: 12),
-        _radioTile(
-          context,
-          title: L10n.t(lang, 'theme.system'),
-          value: models.AppThemeMode.system,
+        RadioGroup<models.AppThemeMode>(
           groupValue: settings.themeMode,
-          onChanged: (v) => appProvider.updateSettings(
-              settings.copyWith(themeMode: v!)),
-        ),
-        _radioTile(
-          context,
-          title: L10n.t(lang, 'theme.light'),
-          value: models.AppThemeMode.light,
-          groupValue: settings.themeMode,
-          onChanged: (v) => appProvider.updateSettings(
-              settings.copyWith(themeMode: v!)),
-        ),
-        _radioTile(
-          context,
-          title: L10n.t(lang, 'theme.dark'),
-          value: models.AppThemeMode.dark,
-          groupValue: settings.themeMode,
-          onChanged: (v) => appProvider.updateSettings(
-              settings.copyWith(themeMode: v!)),
+          onChanged: (v) {
+            if (v != null) {
+              appProvider.updateSettings(settings.copyWith(themeMode: v));
+            }
+          },
+          child: Column(
+            children: [
+              _radioTile(
+                context,
+                title: L10n.t(lang, 'theme.system'),
+                value: models.AppThemeMode.system,
+              ),
+              _radioTile(
+                context,
+                title: L10n.t(lang, 'theme.light'),
+                value: models.AppThemeMode.light,
+              ),
+              _radioTile(
+                context,
+                title: L10n.t(lang, 'theme.dark'),
+                value: models.AppThemeMode.dark,
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 24),
 
@@ -834,7 +843,7 @@ class AdvancedSettingsTab extends StatelessWidget {
           trailing: SizedBox(
             width: 120,
             child: DropdownButtonFormField<int>(
-              value: settings.maxHistorySize,
+              initialValue: settings.maxHistorySize,
               isDense: true,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -914,25 +923,19 @@ Widget _engineOption(
   required String title,
   required String subtitle,
   required models.TranslationEngine value,
-  required models.TranslationEngine groupValue,
-  required ValueChanged<models.TranslationEngine?> onChanged,
 }) {
   return Card(
     elevation: 0,
     margin: const EdgeInsets.only(bottom: 8),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12),
-      side: BorderSide(
-        color: value == groupValue
-            ? Theme.of(context).colorScheme.primary
-            : Colors.transparent,
+      side: const BorderSide(
+        color: Colors.transparent,
         width: 1.5,
       ),
     ),
     child: RadioListTile<models.TranslationEngine>(
       value: value,
-      groupValue: groupValue,
-      onChanged: onChanged,
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle),
       shape: RoundedRectangleBorder(
@@ -985,7 +988,7 @@ Widget _dropdownField(
   required ValueChanged<String> onChanged,
 }) {
   return DropdownButtonFormField<String>(
-    value: items.containsKey(value) ? value : null,
+    initialValue: items.containsKey(value) ? value : null,
     decoration: InputDecoration(
       labelText: label,
       border: OutlineInputBorder(
@@ -1007,8 +1010,6 @@ Widget _radioTile(
   BuildContext context, {
   required String title,
   required models.AppThemeMode value,
-  required models.AppThemeMode groupValue,
-  required ValueChanged<models.AppThemeMode?> onChanged,
 }) {
   return Card(
     elevation: 0,
@@ -1018,8 +1019,6 @@ Widget _radioTile(
     ),
     child: RadioListTile<models.AppThemeMode>(
       value: value,
-      groupValue: groupValue,
-      onChanged: onChanged,
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),

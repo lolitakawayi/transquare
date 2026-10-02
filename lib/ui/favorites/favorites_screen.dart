@@ -192,7 +192,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               onPressed: () {
                 appProvider.historyService.removeFromFavorites(entry.id);
                 appProvider.historyService.save();
-                appProvider.notifyListeners();
+                appProvider.notifyHistoryChanged();
               },
             ),
           ],

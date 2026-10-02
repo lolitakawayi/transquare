@@ -57,6 +57,7 @@ class _TransquareAppState extends State<TransquareApp>
   }
 
   void showFloatingWindow([String? text]) async {
+    final appProvider = context.read<AppProvider>();
     final prefs = await SharedPreferences.getInstance();
     var width = prefs.getDouble('float_window_width') ?? 520;
     var height = prefs.getDouble('float_window_height') ?? 360;
@@ -75,12 +76,12 @@ class _TransquareAppState extends State<TransquareApp>
     });
 
     if (text != null && text.isNotEmpty) {
-      final appProvider = context.read<AppProvider>();
       appProvider.translate(text);
     }
   }
 
   void _closeFloatingWindow() async {
+    final appProvider = context.read<AppProvider>();
     final currentSize = await windowManager.getSize();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('float_window_width', currentSize.width);
@@ -95,7 +96,7 @@ class _TransquareAppState extends State<TransquareApp>
       _showFloating = false;
       _translationText = null;
     });
-    context.read<AppProvider>().clearCurrent();
+    appProvider.clearCurrent();
   }
 
   @override

@@ -5,8 +5,8 @@ import 'http_client_factory.dart';
 import '../../models/translation_result.dart';
 
 class MicrosoftTranslator extends BaseTranslator {
-  String? _apiKey;
-  String _region = 'global';
+  final String? _apiKey;
+  final String _region;
 
   MicrosoftTranslator({String? apiKey, String? region})
       : _apiKey = apiKey,
@@ -34,7 +34,7 @@ class MicrosoftTranslator extends BaseTranslator {
     String? proxyHost,
     int? proxyPort,
   }) async {
-    if (_apiKey == null || _apiKey!.isEmpty) {
+    if (_apiKey == null || _apiKey.isEmpty) {
       throw Exception('Microsoft Translator API Key is required.');
     }
 
@@ -45,7 +45,7 @@ class MicrosoftTranslator extends BaseTranslator {
     );
 
     final headers = {
-      'Ocp-Apim-Subscription-Key': _apiKey!,
+      'Ocp-Apim-Subscription-Key': _apiKey,
       'Ocp-Apim-Subscription-Region': _region,
       'Content-Type': 'application/json',
     };

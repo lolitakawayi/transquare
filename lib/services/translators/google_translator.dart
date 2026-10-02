@@ -5,7 +5,7 @@ import 'http_client_factory.dart';
 import '../../models/translation_result.dart';
 
 class GoogleTranslator extends BaseTranslator {
-  String? _apiKey;
+  final String? _apiKey;
 
   GoogleTranslator({String? apiKey}) : _apiKey = apiKey;
 
@@ -31,7 +31,7 @@ class GoogleTranslator extends BaseTranslator {
     String? proxyHost,
     int? proxyPort,
   }) async {
-    if (_apiKey == null || _apiKey!.isEmpty) {
+    if (_apiKey == null || _apiKey.isEmpty) {
       throw Exception('Google API Key is required. Please configure it in settings.');
     }
 

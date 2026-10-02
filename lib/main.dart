@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -144,7 +143,7 @@ Future<void> _registerHotKeys(AppProvider appProvider) async {
     modifiers = [HotKeyModifier.control, HotKeyModifier.alt];
   }
 
-  LogicalKeyboardKey? key;
+  final LogicalKeyboardKey key;
   switch (keyStr.toUpperCase()) {
     case 'T':
       key = LogicalKeyboardKey.keyT;
@@ -164,7 +163,7 @@ Future<void> _registerHotKeys(AppProvider appProvider) async {
       key = LogicalKeyboardKey.keyT;
   }
 
-  if (modifiers != null && key != null) {
+  if (modifiers != null) {
     await hotKeyManager.register(
       HotKey(
         key: key,
