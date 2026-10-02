@@ -98,6 +98,28 @@ class TranslationService {
     }
   }
 
+  String _normalizeTargetLang(String lang) {
+    if (_currentEngine == null) return lang;
+    switch (_currentEngine!) {
+      case TranslationEngine.google:
+      case TranslationEngine.googleFree:
+      case TranslationEngine.mymemory:
+        if (lang == 'zh') return 'zh-CN';
+        return lang;
+      case TranslationEngine.baidu:
+        if (lang == 'zh-CN' || lang == 'zh') return 'zh';
+        if (lang == 'zh-TW') return 'cht';
+        return lang;
+      case TranslationEngine.deepl:
+        if (lang == 'zh-CN' || lang == 'zh-TW' || lang == 'zh') return 'zh';
+        return lang;
+      case TranslationEngine.microsoft:
+        if (lang == 'zh-CN' || lang == 'zh') return 'zh-Hans';
+        if (lang == 'zh-TW') return 'zh-Hant';
+        return lang;
+    }
+  }
+
   Future<TranslationResult> translate(
     String text, {
     required String sourceLang,
@@ -111,11 +133,13 @@ class TranslationService {
       throw Exception('Translation service not configured. Please select an engine in settings.');
     }
 
+    final normalizedTargetLang = _normalizeTargetLang(targetLang);
+
     final cacheKey = cache.generateKey(
       text,
       _currentTranslator!.engineName,
       sourceLang,
-      targetLang,
+      normalizedTargetLang,
     );
 
     if (useCache) {
@@ -135,7 +159,7 @@ class TranslationService {
     final result = await _currentTranslator!.translate(
       processed,
       sourceLang: sourceLang,
-      targetLang: targetLang,
+      targetLang: normalizedTargetLang,
       proxyHost: _proxyHost,
       proxyPort: _proxyPort,
     );

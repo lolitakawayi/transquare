@@ -120,7 +120,7 @@ class AppSettings {
     this.protectFormulas = true,
     this.protectCitations = true,
     this.sourceLang = 'auto',
-    this.targetLang = 'zh',
+    this.targetLang = 'zh-CN',
     this.hotkeyModifiers = 'Control+Shift',
     this.hotkeyKey = 'T',
     this.enableMiddleMouse = false,
@@ -195,6 +195,11 @@ class AppSettings {
         'apiKeys': apiKeys.toJson(),
       };
 
+  static String _normalizeTargetLang(String lang) {
+    if (lang == 'zh') return 'zh-CN';
+    return lang;
+  }
+
   factory AppSettings.fromJson(Map<String, dynamic> json) => AppSettings(
         engine: TranslationEngine.values.firstWhere(
           (e) => e.name == json['engine'],
@@ -214,7 +219,7 @@ class AppSettings {
         protectFormulas: json['protectFormulas'] as bool? ?? true,
         protectCitations: json['protectCitations'] as bool? ?? true,
         sourceLang: json['sourceLang'] as String? ?? 'auto',
-        targetLang: json['targetLang'] as String? ?? 'zh',
+        targetLang: _normalizeTargetLang(json['targetLang'] as String? ?? 'zh-CN'),
         hotkeyModifiers: json['hotkeyModifiers'] as String? ?? 'Control+Shift',
         hotkeyKey: json['hotkeyKey'] as String? ?? 'T',
         enableMiddleMouse: json['enableMiddleMouse'] as bool? ?? false,

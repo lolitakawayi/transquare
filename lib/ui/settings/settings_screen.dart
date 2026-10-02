@@ -240,7 +240,8 @@ class EngineSettingsTab extends StatelessWidget {
                 label: L10n.t(lang, 'engine.target_lang'),
                 value: settings.targetLang,
                 items: {
-                  'zh': 'Chinese',
+                  'zh-CN': 'Chinese (Simplified)',
+                  'zh-TW': 'Chinese (Traditional)',
                   'en': 'English',
                   'ja': 'Japanese',
                   'ko': 'Korean',
