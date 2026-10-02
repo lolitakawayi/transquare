@@ -21,6 +21,26 @@ class TextProcessor {
     RegExp(r'\{\\{sfn\|[^}]*\}\}'),
   ];
 
+  List<String> detectFormulas(String text) {
+    final formulas = <String>[];
+    for (final pattern in _formulaPatterns) {
+      for (final match in pattern.allMatches(text)) {
+        formulas.add(match.group(0)!);
+      }
+    }
+    return formulas;
+  }
+
+  List<String> detectCitations(String text) {
+    final citations = <String>[];
+    for (final pattern in _citationPatterns) {
+      for (final match in pattern.allMatches(text)) {
+        citations.add(match.group(0)!);
+      }
+    }
+    return citations;
+  }
+
   String protectFormulas(String text) {
     String result = text;
     for (final pattern in _formulaPatterns) {
