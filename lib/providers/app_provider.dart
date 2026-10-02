@@ -54,6 +54,7 @@ AppProvider({
     await vocabularyService.load();
     await historyService.load();
     await _loadSettings();
+    await _loadCache();
     _applySettings();
     notifyListeners();
   }
@@ -188,7 +189,7 @@ AppProvider({
       _errorMessage = null;
       if (_settings.autoSpeak) {
         ttsService.speak(result.translatedText,
-            language: _normalizeTtsLang(result.targetLang));
+            language: TtsService.normalizeTtsLang(result.targetLang));
       }
     } catch (e) {
       _errorMessage = e.toString();
@@ -236,24 +237,5 @@ AppProvider({
     historyService.save();
     saveSettings();
     super.dispose();
-  }
-
-  /// 将翻译引擎返回的短语言代码转为 TTS 引擎期望的长格式
-  ///
-  /// 翻译引擎返回如 'zh', 'en', 'ja'，TTS 需要 'zh-CN', 'en-US', 'ja-JP'
-  String _normalizeTtsLang(String shortCode) {
-    switch (shortCode) {
-      case 'zh': return 'zh-CN';
-      case 'en': return 'en-US';
-      case 'ja': return 'ja-JP';
-      case 'ko': return 'ko-KR';
-      case 'fr': return 'fr-FR';
-      case 'de': return 'de-DE';
-      case 'es': return 'es-ES';
-      case 'pt': return 'pt-BR';
-      case 'ru': return 'ru-RU';
-      case 'ar': return 'ar-SA';
-      default: return 'en-US';
-    }
   }
 }

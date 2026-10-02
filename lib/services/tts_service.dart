@@ -87,4 +87,34 @@ class TtsService {
   void dispose() {
     stop();
   }
+
+  /// 将翻译引擎返回的短语言代码转为 TTS 语音引擎需要的长格式
+  ///
+  /// 例如 'zh' → 'zh-CN', 'en' → 'en-US', 'ja' → 'ja-JP'
+  static String normalizeTtsLang(String langCode) {
+    switch (langCode) {
+      case 'zh':
+        return 'zh-CN';
+      case 'en':
+        return 'en-US';
+      case 'ja':
+        return 'ja-JP';
+      case 'ko':
+        return 'ko-KR';
+      case 'fr':
+        return 'fr-FR';
+      case 'de':
+        return 'de-DE';
+      case 'es':
+        return 'es-ES';
+      case 'pt':
+        return 'pt-BR';
+      case 'ru':
+        return 'ru-RU';
+      case 'ar':
+        return 'ar-SA';
+      default:
+        return 'en-US';
+    }
+  }
 }

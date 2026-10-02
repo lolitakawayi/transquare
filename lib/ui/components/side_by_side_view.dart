@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/translation_result.dart';
 import '../../providers/app_provider.dart';
 import '../../l10n/strings.dart';
+import '../../services/tts_service.dart';
 
 class SideBySideView extends StatelessWidget {
   final TranslationResult result;
@@ -142,7 +143,7 @@ class SideBySideView extends StatelessWidget {
           tooltip: L10n.t(lang, 'tts.play'),
           onTap: () {
             final appProvider = context.read<AppProvider>();
-            final langCode = _getTtsLanguageCode(result.targetLang);
+            final langCode = TtsService.normalizeTtsLang(result.targetLang);
             appProvider.ttsService.speak(result.translatedText, language: langCode);
           },
         ),
@@ -226,21 +227,5 @@ class SideBySideView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getTtsLanguageCode(String langCode) {
-    switch (langCode) {
-      case 'zh': return 'zh-CN';
-      case 'en': return 'en-US';
-      case 'ja': return 'ja-JP';
-      case 'ko': return 'ko-KR';
-      case 'fr': return 'fr-FR';
-      case 'de': return 'de-DE';
-      case 'es': return 'es-ES';
-      case 'pt': return 'pt-BR';
-      case 'ru': return 'ru-RU';
-      case 'ar': return 'ar-SA';
-      default: return 'en-US';
-    }
   }
 }

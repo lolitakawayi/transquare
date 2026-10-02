@@ -62,8 +62,6 @@ void main() async {
   );
 
   await _registerHotKeys(_globalAppProvider!);
-
-  await PlatformService.initialize();
 }
 
 void _setupNativeHotkeyListener() {

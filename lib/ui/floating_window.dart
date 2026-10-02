@@ -2,7 +2,7 @@ import 'package:flutter/material.dart'; // Flutter Material Design 组件库
 import 'package:provider/provider.dart'; // Provider 状态管理，用于响应式获取 AppProvider
 import 'package:window_manager/window_manager.dart'; // 桌面窗口管理，控制拖拽和置顶
 import '../providers/app_provider.dart'; // 应用全局状态提供者（翻译状态、设置等）
-import '../services/text_processor.dart'; // 文本处理服务
+
 import '../l10n/strings.dart'; // 国际化字符串支持
 import 'components/translation_card.dart'; // 翻译结果卡片组件（纵向布局）
 import 'components/side_by_side_view.dart'; // 翻译结果并排对比视图组件
@@ -85,11 +85,6 @@ class _FloatingWindowState extends State<FloatingWindow> {
       builder: (context, appProvider, _) {
         // 判断当前是否为暗色主题
         final isDark = Theme.of(context).brightness == Brightness.dark;
-
-        // 判断是否有内容需要展示（翻译结果、翻译中、或有当前文本）
-        final hasContent = appProvider.currentResult != null ||
-            appProvider.isTranslating ||
-            appProvider.currentText != null;
 
         return Scaffold(
           backgroundColor: Colors.transparent,

@@ -11,6 +11,7 @@ class GlossaryService {
   final List<GlossaryEntry> _entries = [];
   final _uuid = const Uuid();
   bool _dirty = false;
+  Map<String, String>? _cachedMap;
 
   List<GlossaryEntry> get entries => List.unmodifiable(_entries);
 
@@ -31,6 +32,7 @@ class GlossaryService {
       updatedAt: now,
     );
     _entries.add(entry);
+    _cachedMap = null;
     _dirty = true;
   }
 
@@ -38,26 +40,30 @@ class GlossaryService {
     final index = _entries.indexWhere((e) => e.id == updated.id);
     if (index >= 0) {
       _entries[index] = updated.copyWith(updatedAt: DateTime.now());
+      _cachedMap = null;
       _dirty = true;
     }
   }
 
   void removeEntry(String id) {
     _entries.removeWhere((e) => e.id == id);
+    _cachedMap = null;
     _dirty = true;
   }
 
   void removeAll() {
     _entries.clear();
+    _cachedMap = null;
     _dirty = true;
   }
 
   Map<String, String> get glossaryMap {
+    if (_cachedMap != null) return _cachedMap!;
     final map = <String, String>{};
     for (final entry in _entries) {
       map[entry.sourceTerm] = entry.targetTerm;
     }
-    return map;
+    return _cachedMap = map;
   }
 
   List<GlossaryEntry> search(String query) {
@@ -198,6 +204,7 @@ class GlossaryService {
         for (final item in data) {
           _entries.add(GlossaryEntry.fromJson(item as Map<String, dynamic>));
         }
+        _cachedMap = null;
         _dirty = false;
       }
     } catch (_) {}

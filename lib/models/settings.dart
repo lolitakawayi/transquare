@@ -92,7 +92,6 @@ class AppSettings {
   final AppLanguage language;
   final double fontSize;
   final bool windowPinned;
-  final bool windowTransparent;
   final double windowOpacity;
   final bool autoSpeak;
   final bool enableCache;
@@ -114,7 +113,6 @@ class AppSettings {
     this.language = AppLanguage.chinese,
     this.fontSize = 14.0,
     this.windowPinned = false,
-    this.windowTransparent = false,
     this.windowOpacity = 0.95,
     this.autoSpeak = false,
     this.enableCache = true,
@@ -137,7 +135,6 @@ class AppSettings {
     AppLanguage? language,
     double? fontSize,
     bool? windowPinned,
-    bool? windowTransparent,
     double? windowOpacity,
     bool? autoSpeak,
     bool? enableCache,
@@ -159,7 +156,6 @@ class AppSettings {
       language: language ?? this.language,
       fontSize: fontSize ?? this.fontSize,
       windowPinned: windowPinned ?? this.windowPinned,
-      windowTransparent: windowTransparent ?? this.windowTransparent,
       windowOpacity: windowOpacity ?? this.windowOpacity,
       autoSpeak: autoSpeak ?? this.autoSpeak,
       enableCache: enableCache ?? this.enableCache,
@@ -183,7 +179,6 @@ class AppSettings {
         'language': language.code,
         'fontSize': fontSize,
         'windowPinned': windowPinned,
-        'windowTransparent': windowTransparent,
         'windowOpacity': windowOpacity,
         'autoSpeak': autoSpeak,
         'enableCache': enableCache,
@@ -212,7 +207,6 @@ class AppSettings {
         language: AppLanguage.fromCode(json['language'] as String? ?? 'zh'),
         fontSize: (json['fontSize'] as num?)?.toDouble() ?? 14.0,
         windowPinned: json['windowPinned'] as bool? ?? false,
-        windowTransparent: json['windowTransparent'] as bool? ?? false,
         windowOpacity: (json['windowOpacity'] as num?)?.toDouble() ?? 0.95,
         autoSpeak: json['autoSpeak'] as bool? ?? false,
         enableCache: json['enableCache'] as bool? ?? true,

@@ -5,6 +5,8 @@ import '../../models/translation_result.dart'; // 翻译结果数据模型
 import '../../providers/app_provider.dart'; // 应用全局状态提供者
 import '../../l10n/strings.dart'; // 国际化字符串支持
 
+import '../../services/tts_service.dart'; // TTS 语音朗读服务
+
 /// 翻译结果卡片组件
 ///
 /// 以纵向卡片形式展示单条翻译结果，包含原文、译文、
@@ -48,36 +50,6 @@ class TranslationCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  /// 将翻译目标语言代码转换为 TTS 引擎可识别的语言代码
-  ///
-  /// 例如：'zh' → 'zh-CN', 'en' → 'en-US', 'ja' → 'ja-JP'
-  static String _getTtsLanguageCode(String langCode) {
-    switch (langCode) {
-      case 'zh':
-        return 'zh-CN';
-      case 'en':
-        return 'en-US';
-      case 'ja':
-        return 'ja-JP';
-      case 'ko':
-        return 'ko-KR';
-      case 'fr':
-        return 'fr-FR';
-      case 'de':
-        return 'de-DE';
-      case 'es':
-        return 'es-ES';
-      case 'pt':
-        return 'pt-BR';
-      case 'ru':
-        return 'ru-RU';
-      case 'ar':
-        return 'ar-SA';
-      default:
-        return 'en-US'; // 默认使用美式英语
-    }
   }
 
   /// 构建卡片头部
@@ -220,7 +192,7 @@ class TranslationCard extends StatelessWidget {
           tooltip: L10n.t(lang, 'tts.play'),
           onTap: () {
             final appProvider = context.read<AppProvider>();
-            final langCode = _getTtsLanguageCode(result.targetLang);
+            final langCode = TtsService.normalizeTtsLang(result.targetLang);
             appProvider.ttsService.speak(result.translatedText, language: langCode);
           },
         ),

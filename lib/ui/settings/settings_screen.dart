@@ -759,16 +759,6 @@ class AppearanceSettingsTab extends StatelessWidget {
           onChanged: (v) => appProvider.togglePinned(),
         ),
         SwitchListTile(
-          title: Text(lang == 'zh' ? '透明背景' : 'Transparent background',
-              style: const TextStyle(fontWeight: FontWeight.w600)),
-          subtitle: Text(lang == 'zh'
-              ? '使浮动窗口半透明'
-              : 'Make the floating window semi-transparent'),
-          value: settings.windowTransparent,
-          onChanged: (v) => appProvider.updateSettings(
-              settings.copyWith(windowTransparent: v)),
-        ),
-        SwitchListTile(
           title: Text(lang == 'zh' ? '自动朗读' : 'Auto-speak',
               style: const TextStyle(fontWeight: FontWeight.w600)),
           subtitle: Text(lang == 'zh'

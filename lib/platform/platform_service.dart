@@ -4,13 +4,6 @@ import 'package:flutter/services.dart';
 class PlatformService {
   static const _channel = MethodChannel('com.transquare/platform');
 
-  static bool _initialized = false;
-
-  static Future<void> initialize() async {
-    if (_initialized) return;
-    _initialized = true;
-  }
-
   static Future<String> getClipboardText() async {
     try {
       final result = await _channel.invokeMethod<String>('getClipboardText');
@@ -34,21 +27,6 @@ class PlatformService {
     } catch (e) {
       return '';
     }
-  }
-
-  static Future<bool> isListening() async {
-    try {
-      final result = await _channel.invokeMethod<bool>('isListening');
-      return result ?? true;
-    } catch (e) {
-      return true;
-    }
-  }
-
-  static Future<void> setWindowOnTop(bool onTop) async {
-    try {
-      await _channel.invokeMethod('setWindowOnTop', {'onTop': onTop});
-    } catch (_) {}
   }
 
   static Future<void> setWindowOpacity(double opacity) async {
