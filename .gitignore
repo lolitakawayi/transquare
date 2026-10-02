@@ -47,5 +47,9 @@ app.*.map.json
 # Widget Preview related
 .widget_preview/
 
+# DevTools & IDE metadata
+devtools_options.yaml
+.metadata
+
 # Test files
 /test/
