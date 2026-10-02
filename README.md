@@ -47,6 +47,12 @@ Transquare 是一款专为 Windows 平台设计的翻译工具，旨在帮助用
 
 ### 安装与运行
 
+#### 下载发行版
+
+1. 前往 [Releases](https://github.com/lolitakawayi/transquare/releases) 页面
+2. 下载最新的 `Transquare-Windows.zip` 压缩包
+3. 解压后，双击 `transquare.exe` 即可运行
+
 #### 从源码构建
 
 ```bash
@@ -176,6 +182,12 @@ Transquare is a translation tool designed for Windows, built to help users quick
 - **Runtime**: None — compiled as a native Windows application via Flutter
 
 ### Installation & Running
+
+#### Download Release 
+
+1. Go to the [Releases](https://github.com/lolitakawayi/transquare/releases) page
+2. Download the latest `Transquare-Windows.zip`
+3. Extract and double-click `transquare.exe` to run
 
 #### Build from Source
 
