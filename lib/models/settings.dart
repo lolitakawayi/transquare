@@ -108,7 +108,7 @@ class AppSettings {
   final ApiKeys apiKeys;
 
   const AppSettings({
-    this.engine = TranslationEngine.googleFree,
+    this.engine = TranslationEngine.mymemory,
     this.themeMode = AppThemeMode.system,
     this.language = AppLanguage.chinese,
     this.fontSize = 14.0,
