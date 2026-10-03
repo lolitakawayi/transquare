@@ -1,4 +1,4 @@
-# Transquare
+# Transquare/译方
 
 > 一款面向学术阅读的 Windows 翻译工具 · A Powerful Translation Tool for Academic Reading on Windows
 
