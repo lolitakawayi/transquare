@@ -10,13 +10,13 @@
 
 ### 简介
 
-Transquare 是一款专为 Windows 平台设计的翻译工具，旨在帮助用户在阅读学术文献、外文资料时快速获取翻译结果。它支持**鼠标右键划词翻译**、**全局快捷键取词翻译**、**剪贴板监听自动翻译**，并提供**术语表**、**生词本**、**翻译历史**、**收藏夹**等辅助学习功能。
+Transquare 是一款专为 Windows 平台设计的翻译工具，旨在帮助用户在阅读学术文献、外文资料时快速获取翻译结果。它支持**鼠标左键划词翻译**、**全局快捷键取词翻译**、**剪贴板监听自动翻译**，并提供**术语表**、**生词本**、**翻译历史**、**收藏夹**等辅助学习功能。
 
 ### 核心特性
 
 | 特性 | 说明 |
 |------|------|
-| 🖱️ **鼠标右键划词翻译** | 长按鼠标右键滑动选中需要翻译的单词/短语，松开即翻译，阅读时无需离开鼠标 |
+| 🖱️ **鼠标左键划词翻译** | 长按鼠标左键滑动选中需要翻译的单词/短语，松开即翻译，阅读时无需离开鼠标 |
 | 🔤 **多引擎翻译** | 内置 6 种翻译引擎：Google、Microsoft、DeepL、百度、Google Free（免 Key 直连）、MyMemory（免费免注册） |
 | 🪟 **双窗口设计** | 主窗口管理词库和学习数据，悬浮窗快速显示翻译结果 |
 | ⌨️ **全局热键** | 选中文本后按 `Ctrl+Shift+T`（可自定义）或者点击鼠标中键即刻翻译 |
@@ -77,7 +77,7 @@ flutter build windows
 
 #### 快速翻译
 
-1. **鼠标右键划词**：在任意应用中，**长按鼠标右键滑动选中**需要翻译的单词或短语 → 松开鼠标右键 → 即刻弹出翻译悬浮窗。这是最符合阅读习惯的划词翻译方式，全程无需离开鼠标。
+1. **鼠标左键划词**：在任意应用中，**长按鼠标左键滑动选中**需要翻译的单词或短语 → 松开鼠标左键 → 即刻弹出翻译悬浮窗。这是最符合阅读习惯的划词翻译方式，全程无需离开鼠标。
 2. **全局快捷键**：在任意应用中选中文本 → 按 `Ctrl+Shift+T` → 弹出翻译悬浮窗
 3. **剪贴板监听**：开启后，复制文本即自动翻译
 
@@ -147,13 +147,13 @@ lib/
 
 ### Overview
 
-Transquare is a translation tool designed for Windows, built to help users quickly obtain translations while reading academic papers and foreign-language materials. It features **right-mouse-button drag-to-select translation **, **global hotkey translation**, **clipboard monitoring**, and auxiliary learning tools including a **glossary**, **vocabulary book**, **translation history**, and **favorites**.
+Transquare is a translation tool designed for Windows, built to help users quickly obtain translations while reading academic papers and foreign-language materials. It features **left-mouse-button drag-to-select translation **, **global hotkey translation**, **clipboard monitoring**, and auxiliary learning tools including a **glossary**, **vocabulary book**, **translation history**, and **favorites**.
 
 ### Key Features
 
 | Feature | Description |
 |---------|-------------|
-| 🖱️ **Right-Mouse Drag-to-Select** | Long-press the right mouse button and drag to select a word or phrase — release to translate instantly, no need to leave the mouse |
+| 🖱️ **Left-Mouse Drag-to-Select** | Long-press the left mouse button and drag to select a word or phrase — release to translate instantly, no need to leave the mouse |
 | 🔤 **Multi-Engine Translation** | 6 built-in engines: Google, Microsoft, DeepL, Baidu, Google Free (no key), MyMemory (free, no registration) |
 | 🪟 **Dual-Window Design** | Main window for vocabulary management; floating window for instant translation results |
 | ⌨️ **Global Hotkey** | Select text anywhere and press `Ctrl+Shift+T` (customizable) or click the middle mouse button to translate |
@@ -214,7 +214,7 @@ The release build is located in `build/windows/x64/runner/Release/`.
 
 #### Quick Translation
 
-1. **Right-Mouse Drag-to-Select** (Recommended ✨): In any application, **long-press the right mouse button and drag** to select the word or phrase you want to translate → release the right mouse button → the translation floating window appears instantly. This is the most natural way to translate while reading — you never have to leave the mouse.
+1. **Left-Mouse Drag-to-Select** (Recommended ✨): In any application, **long-press the left mouse button and drag** to select the word or phrase you want to translate → release the left mouse button → the translation floating window appears instantly. This is the most natural way to translate while reading — you never have to leave the mouse.
 2. **Global Hotkey**: Select text in any application → press `Ctrl+Shift+T` → translation floating window appears
 3. **Clipboard Monitoring**: Enable it to auto-translate text on copy
 
